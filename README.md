@@ -13,11 +13,11 @@ NOTE: it can't pass output to next command in pipeline
 - Supports images, text data and core nushell types passed as a pipeline input
 - Manages llama.cpp instance, checks it's updates via GitHub Releases
 
-# Commands
+## Commands
 ```nu
-# stateful chat with model
-chip <prompt>
-chip -s <prompt>
+chip <prompt> # talk to model (stateful) 
+chip -s <prompt> # stateless mode
+chip forget # erase chat history
 
 # manage llama-server instance
 chip sleep # kill llama-server
@@ -28,7 +28,7 @@ chip add-model <alias> <path/to/model> [--mmProjFilePath <path/to/mmproj>]
 chip check-engine
 ```
 
-# models.toml config
+## models.toml config
 ```toml
 [[models]]
 name = "alias"
@@ -44,7 +44,7 @@ flash-attn = "on"
 cache-type-v = "q8_0" 
 ```
 
-# Why
+#### Why
 TLDR; I was a bit bored 
 
 Why not? Well everybody writes a harneses for interacting with LLMs (remote or local ones) in different contexts, but here I wanted to use the data power of nushell and finally delete a Jan client, because found it a bit dull and I had a feeling that this  copy-paste-in-prompt process can be simplified without mcp. It was also interesting to write scripts for nushell and finaly start working with my shell, before I'd chosen this shell because of it's cross-platform and a bit posix nature and not this whole pipeline thing.
