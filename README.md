@@ -18,6 +18,7 @@ NOTE: it can't pass output to next command in pipeline yet
 http get https://raw.githubusercontent.com/mntcloud/chip/refs/heads/master/chip.nu | save your/preferable/path/to/chip.nu
 ```
 Then add in your nushell config file a `use` command with path of the script and restart the shell
+
 To get started just run `chip check-engine` and this what it will do:
 
 1. Asks your permission to install llama.cpp release
@@ -26,7 +27,7 @@ To get started just run `chip check-engine` and this what it will do:
 4. Downloads a selected one
 5. Unpacks in a folder with name of release and sets version in `.version` file
 
-You can now run `add-model` and start server with `switch` command
+And then you can run `add-model` and start server with `switch` command
 
 ## Commands
 ```nu
