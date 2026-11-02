@@ -1,0 +1,47 @@
+name: Update llama.cpp releases
+
+on:
+  schedule:
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-release-snapshot:
+    runs-on: ubuntu-latest
+    env:
+      LLAMA_CPP_REPO: ggml-org/llama.cpp
+      LLAMA_RELEASE_LIMIT: "25"
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Fetch and process llama.cpp releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          fetched_at="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          gh api "repos/${LLAMA_CPP_REPO}/releases?per_page=${LLAMA_RELEASE_LIMIT}" |
+            jq \
+              --arg fetched_at "$fetched_at" \
+              --arg source "https://github.com/${LLAMA_CPP_REPO}" \
+              --from-file .github/scripts/process-llama-releases.jq \
+              > llama-releases.json
+          jq -e '.releases | length > 0' llama-releases.json > /dev/null
+
+      - name: Publish JSON as a release asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="llama-releases-${GITHUB_RUN_ID}"
+          title="llama.cpp releases $(date -u +'%Y-%m-%d')"
+
+          if ! gh release view "$tag" > /dev/null 2>&1; then
+            gh release create "$tag" \
+              --title "$title" \
+              --notes "Weekly snapshot of the latest llama.cpp releases."
+          fi
+
+          gh release upload "$tag" llama-releases.json --clobber
